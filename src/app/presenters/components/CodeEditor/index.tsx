@@ -51,7 +51,13 @@ const CodeEditor = () => {
     try {
       const currentContent = editorView.state.doc.toString();
       const json = JSON.parse(currentContent);
-      const formattedJson = JSON.stringify(json, null, 2);
+      let formattedJson = JSON.stringify(json, null, 2);
+      let lines = formattedJson.split(/\r\n|\r|\n/).length;
+      while (lines <= 50) {
+        formattedJson = formattedJson + "\n";
+        lines = formattedJson.split(/\r\n|\r|\n/).length;
+      }
+
       editorView.dispatch({
         changes: {
           from: 0,
@@ -62,6 +68,20 @@ const CodeEditor = () => {
       });
     } catch (error) {
       console.error("Failed to format JSON:", error);
+      let currentContent = editorView.state.doc.toString();
+      let lines = currentContent.split(/\r\n|\r|\n/).length;
+      while (lines <= 50) {
+        currentContent = currentContent + "\n";
+        lines = currentContent.split(/\r\n|\r|\n/).length;
+      }
+      editorView.dispatch({
+        changes: {
+          from: 0,
+          to: editorView.state.doc.length,
+          insert: currentContent,
+        },
+        effects: updateDecorations.of(Decoration.none),
+      });
       const position = getErrorPosition(error.message);
       showError(editorView, position);
     }
@@ -89,12 +109,16 @@ const CodeEditor = () => {
     });
   }
 
+  useEffect(() => {
+    formatJson(editorViewRef.current);
+  }, []);
+
   return (
     <div>
-      <div ref={editorDiv} style={{ height: "500px" }} />
       <button onClick={() => formatJson(editorViewRef.current)}>
         Format JSON
       </button>
+      <div ref={editorDiv} />
     </div>
   );
 };
