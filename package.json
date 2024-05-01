@@ -9,6 +9,10 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@codemirror/basic-setup": "^0.20.0",
+    "@codemirror/lang-json": "0.20.x",
+    "@codemirror/state": "^0.20.1",
+    "@codemirror/view": "^0.20.7",
     "next": "14.2.3",
     "react": "^18",
     "react-dom": "^18"
