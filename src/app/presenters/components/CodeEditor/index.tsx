@@ -4,6 +4,9 @@ import { EditorState, StateEffect, StateField } from "@codemirror/state";
 import { EditorView, Decoration } from "@codemirror/view";
 import { basicSetup } from "@codemirror/basic-setup";
 import { json } from "@codemirror/lang-json";
+import { format } from "path";
+import { addLinePadding, formatJsonWithLinePadding } from "./utils/json";
+import { add } from "date-fns";
 
 // Define a state field to manage error decorations
 const errorHighlightField = StateField.define({
@@ -50,30 +53,20 @@ const CodeEditor = () => {
   const formatJson = (editorView) => {
     try {
       const currentContent = editorView.state.doc.toString();
-      const json = JSON.parse(currentContent);
-      let formattedJson = JSON.stringify(json, null, 2);
-      let lines = formattedJson.split(/\r\n|\r|\n/).length;
-      while (lines <= 50) {
-        formattedJson = formattedJson + "\n";
-        lines = formattedJson.split(/\r\n|\r|\n/).length;
-      }
+      const json = formatJsonWithLinePadding(currentContent, 50);
 
       editorView.dispatch({
         changes: {
           from: 0,
           to: editorView.state.doc.length,
-          insert: formattedJson,
+          insert: json,
         },
         effects: updateDecorations.of(Decoration.none),
       });
     } catch (error) {
-      console.error("Failed to format JSON:", error);
       let currentContent = editorView.state.doc.toString();
-      let lines = currentContent.split(/\r\n|\r|\n/).length;
-      while (lines <= 50) {
-        currentContent = currentContent + "\n";
-        lines = currentContent.split(/\r\n|\r|\n/).length;
-      }
+      currentContent = addLinePadding(currentContent, 50);
+
       editorView.dispatch({
         changes: {
           from: 0,
