@@ -12,7 +12,18 @@ export const addLinePadding = (text: string, lines: number) => {
   return text;
 };
 
-export const formatJsonWithLinePadding = (text: string, lines: 50) => {
+export const formatJsonWithLinePadding = (text: string, lines = 50) => {
   let json = formatJson(text);
   return addLinePadding(json, 50);
+};
+
+export const getJSONParseErrorPosition = (message: string) => {
+  const match = /at position (\d+)/.exec(message);
+  if (match) {
+    return { from: parseInt(match[1], 10), to: parseInt(match[1], 10) + 1 };
+  }
+  return {
+    from: 0,
+    to: 0,
+  };
 };
