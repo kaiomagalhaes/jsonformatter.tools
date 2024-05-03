@@ -52,6 +52,11 @@ const CodeEditor = () => {
       return formatJsonWithLinePadding(JSON.stringify(cleanedJson, null, 2));
     });
   };
+
+  const updateContent = (content: string) => {
+    setContent(content);
+  };
+
   return (
     <>
       <button onClick={formatToJson}>Format JSON</button>
