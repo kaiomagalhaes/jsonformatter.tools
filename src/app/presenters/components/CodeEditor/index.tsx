@@ -8,6 +8,7 @@ import {
   removeNullValues,
   sortJsonKeys,
 } from "./utils/json";
+import { Button, Grid } from "@mui/material";
 
 type Actions = {
   getContent: () => string;
@@ -53,16 +54,34 @@ const CodeEditor = () => {
     });
   };
 
-  const updateContent = (content: string) => {
-    setContent(content);
-  };
-
   return (
     <>
-      <button onClick={formatToJson}>Format JSON</button>
-      <button onClick={sortKeys}>Sort keys</button>
-      <button onClick={removeNull}>Remove null</button>
-      <Editor ref={editorRef} content={content} />
+      <Grid container spacing={1} pb={2}>
+        <Grid item>
+          <Button
+            onClick={() => formatToJson()}
+            variant="contained"
+            color="primary"
+          >
+            Format
+          </Button>
+        </Grid>
+        <Grid item>
+          <Button onClick={sortKeys} variant="contained" color="primary">
+            Sort keys
+          </Button>
+        </Grid>
+        <Grid item>
+          <Button onClick={removeNull} variant="contained" color="primary">
+            Remove null values
+          </Button>
+        </Grid>
+      </Grid>
+      <Grid container>
+        <Grid item xs={5}>
+          <Editor ref={editorRef} content={content} />
+        </Grid>
+      </Grid>
     </>
   );
 };
