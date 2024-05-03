@@ -9,16 +9,16 @@ const formatJson = (text: string | object) => {
 
 const lineLength = (str: string) => str.split(/\r\n|\r|\n/).length;
 
-export const addLinePadding = (text: string, lines: number) => {
-  while (lineLength(text) <= lines) {
+export const addLinePadding = (text: string, lines = 40) => {
+  while (lineLength(text) < lines) {
     text = text + "\n";
   }
   return text;
 };
 
-export const formatJsonWithLinePadding = (text: string, lines = 50) => {
+export const formatJsonWithLinePadding = (text: string) => {
   let json = formatJson(text);
-  return addLinePadding(json, 50);
+  return addLinePadding(json);
 };
 
 export const getJSONParseErrorPosition = (message: string) => {

@@ -17,7 +17,7 @@ type Actions = {
 };
 
 const CodeEditor = () => {
-  const defaultContent = addLinePadding("", 50);
+  const defaultContent = addLinePadding("");
   const [content, setContent] = useState(defaultContent);
 
   const editorRef = useRef<Actions>(null);
