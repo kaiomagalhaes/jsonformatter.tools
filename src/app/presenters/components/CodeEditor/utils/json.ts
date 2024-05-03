@@ -1,4 +1,8 @@
-const formatJson = (text: string) => {
+const formatJson = (text: string | object) => {
+  if (typeof text === "object") {
+    return JSON.stringify(text, null, 2);
+  }
+
   const json = JSON.parse(text);
   return JSON.stringify(json, null, 2);
 };
@@ -26,4 +30,44 @@ export const getJSONParseErrorPosition = (message: string) => {
     from: 0,
     to: 0,
   };
+};
+
+export const sortJsonKeys = (
+  json: Record<string, any>
+): Record<string, any> => {
+  return Object.keys(json)
+    .sort()
+    .reduce((acc: Record<string, any>, key: string) => {
+      const value = json[key];
+      if (
+        typeof value === "object" &&
+        value !== null &&
+        !Array.isArray(value)
+      ) {
+        acc[key] = sortJsonKeys(value);
+      } else {
+        acc[key] = value;
+      }
+      return acc;
+    }, {});
+};
+
+export const removeNullValues = (
+  json: Record<string, any>
+): Record<string, any> => {
+  return Object.keys(json).reduce((acc: Record<string, any>, key: string) => {
+    const value = json[key];
+    if (value === null) {
+      return acc;
+    } else if (
+      typeof value === "object" &&
+      value !== null &&
+      !Array.isArray(value)
+    ) {
+      acc[key] = removeNullValues(value);
+    } else {
+      acc[key] = value;
+    }
+    return acc;
+  }, {});
 };

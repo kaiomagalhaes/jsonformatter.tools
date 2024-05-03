@@ -5,6 +5,8 @@ import {
   addLinePadding,
   formatJsonWithLinePadding,
   getJSONParseErrorPosition,
+  removeNullValues,
+  sortJsonKeys,
 } from "./utils/json";
 
 type Actions = {
@@ -18,10 +20,15 @@ const CodeEditor = () => {
   const [content, setContent] = useState(defaultContent);
 
   const editorRef = useRef<Actions>(null);
-  const formatToJson = () => {
+
+  const formatToJson = (format?: (json: string) => string) => {
     let content = editorRef?.current?.getContent() || defaultContent;
     try {
-      const json = formatJsonWithLinePadding(content);
+      let json = formatJsonWithLinePadding(content);
+      if (format) {
+        json = format(json);
+      }
+
       editorRef?.current?.updateContent(json);
     } catch (e: any) {
       content = addLinePadding(content, 50);
@@ -32,9 +39,24 @@ const CodeEditor = () => {
     }
   };
 
+  const sortKeys = () => {
+    formatToJson((json) => {
+      const sortedJson = sortJsonKeys(JSON.parse(json));
+      return formatJsonWithLinePadding(JSON.stringify(sortedJson, null, 2));
+    });
+  };
+
+  const removeNull = () => {
+    formatToJson((json) => {
+      const cleanedJson = removeNullValues(JSON.parse(json));
+      return formatJsonWithLinePadding(JSON.stringify(cleanedJson, null, 2));
+    });
+  };
   return (
     <>
       <button onClick={formatToJson}>Format JSON</button>
+      <button onClick={sortKeys}>Sort keys</button>
+      <button onClick={removeNull}>Remove null</button>
       <Editor ref={editorRef} content={content} />
     </>
   );
