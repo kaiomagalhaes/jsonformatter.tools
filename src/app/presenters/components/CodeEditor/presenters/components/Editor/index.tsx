@@ -1,7 +1,7 @@
 "use client";
 import { forwardRef, useEffect, useRef, useImperativeHandle } from "react";
 import { EditorState, StateEffect, StateField } from "@codemirror/state";
-import { EditorView, Decoration } from "@codemirror/view";
+import { EditorView, Decoration, DecorationSet } from "@codemirror/view";
 import { basicSetup } from "@codemirror/basic-setup";
 import { json } from "@codemirror/lang-json";
 
@@ -18,9 +18,9 @@ const errorHighlightField = StateField.define({
   provide: (field) => EditorView.decorations.from(field),
 });
 
-const updateDecorations = StateEffect.define({
+const updateDecorations = StateEffect.define<DecorationSet>({
   map(value, mapping) {
-    return value?.map(mapping);
+    return value.map(mapping);
   },
 });
 
@@ -45,7 +45,7 @@ const Editor = forwardRef(({ content }: Props, ref) => {
         effects: updateDecorations.of(Decoration.none),
       });
     },
-    onJSONParserError: (position) => {
+    onJSONParserError: (position: { from: number; to: number }) => {
       const editorView = editorViewRef.current;
       if (!position || !editorView) return;
 
