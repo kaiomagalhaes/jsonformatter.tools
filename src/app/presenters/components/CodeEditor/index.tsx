@@ -84,7 +84,7 @@ const CodeEditor = () => {
         </Grid>
       </Grid>
       <Grid container>
-        <Grid item xs={5}>
+        <Grid item xs={12}>
           <Editor ref={editorRef} content={content} />
         </Grid>
       </Grid>
