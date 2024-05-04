@@ -5,6 +5,7 @@ import { EditorView, Decoration } from "@codemirror/view";
 import { basicSetup } from "@codemirror/basic-setup";
 import { json } from "@codemirror/lang-json";
 import { highlightExtension, updateDecorations } from "./utils/highlights";
+import { cleanHighlightsListener } from "./utils/listeners";
 
 type Props = {
   content: string;
@@ -51,7 +52,12 @@ const Editor = forwardRef(({ content }: Props, ref) => {
 
   useEffect(() => {
     if (editorDiv.current) {
-      const extensions = [basicSetup, json(), highlightExtension];
+      const extensions = [
+        basicSetup,
+        json(),
+        highlightExtension,
+        cleanHighlightsListener,
+      ];
       const state = EditorState.create({
         doc: content,
         extensions,
