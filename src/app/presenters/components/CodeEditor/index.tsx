@@ -3,7 +3,7 @@ import { useRef, useState } from "react";
 import Editor from "./presenters/components/Editor";
 import {
   addLinePadding,
-  formatJsonWithLinePadding,
+  formatJson,
   getJSONParseErrorPosition,
   removeNullValues,
   sortJsonKeys,
@@ -15,6 +15,8 @@ type Actions = {
   updateContent: (content: string) => void;
   onJSONParserError: (position: { from: number; to: number }) => void;
 };
+
+export const MINIMUM_LINES = 40;
 
 const CodeEditor = () => {
   const defaultContent = addLinePadding("");
@@ -36,7 +38,7 @@ const CodeEditor = () => {
     let content = editorRef?.current?.getContent() || defaultContent;
     const json = getJsonObject(content);
     if (!json) return;
-    let parsedJson = formatJsonWithLinePadding(json);
+    let parsedJson = formatJson(json);
     if (format) {
       parsedJson = format(json);
     }
@@ -47,14 +49,14 @@ const CodeEditor = () => {
   const sortKeys = () => {
     formatToJson((json) => {
       const sortedJson = sortJsonKeys(json);
-      return formatJsonWithLinePadding(sortedJson);
+      return formatJson(sortedJson);
     });
   };
 
   const removeNull = () => {
     formatToJson((json) => {
       const cleanedJson = removeNullValues(json);
-      return formatJsonWithLinePadding(cleanedJson);
+      return formatJson(cleanedJson);
     });
   };
 

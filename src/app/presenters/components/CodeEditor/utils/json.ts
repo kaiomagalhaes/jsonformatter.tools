@@ -1,4 +1,6 @@
-const formatJson = (text: string | object) => {
+import { MINIMUM_LINES } from "..";
+
+export const formatJson = (text: string | object) => {
   if (typeof text === "object") {
     return JSON.stringify(text, null, 2);
   }
@@ -9,7 +11,7 @@ const formatJson = (text: string | object) => {
 
 const lineLength = (str: string) => str.split(/\r\n|\r|\n/).length;
 
-export const addLinePadding = (text: string, lines = 40) => {
+export const addLinePadding = (text: string, lines = MINIMUM_LINES) => {
   while (lineLength(text) < lines) {
     text = text + "\n";
   }

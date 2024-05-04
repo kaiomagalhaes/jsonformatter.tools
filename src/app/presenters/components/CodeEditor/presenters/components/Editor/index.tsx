@@ -5,7 +5,10 @@ import { EditorView, Decoration } from "@codemirror/view";
 import { basicSetup } from "@codemirror/basic-setup";
 import { json } from "@codemirror/lang-json";
 import { highlightExtension, updateDecorations } from "./utils/highlights";
-import { cleanHighlightsListener } from "./utils/listeners";
+import {
+  cleanHighlightsListener,
+  ensureLineCountListener,
+} from "./utils/listeners";
 
 type Props = {
   content: string;
@@ -57,6 +60,7 @@ const Editor = forwardRef(({ content }: Props, ref) => {
         json(),
         highlightExtension,
         cleanHighlightsListener,
+        ensureLineCountListener,
       ];
       const state = EditorState.create({
         doc: content,
