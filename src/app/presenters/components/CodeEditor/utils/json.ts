@@ -16,9 +16,9 @@ export const addLinePadding = (text: string, lines = 40) => {
   return text;
 };
 
-export const formatJsonWithLinePadding = (text: string) => {
-  let json = formatJson(text);
-  return addLinePadding(json);
+export const formatJsonWithLinePadding = (json: Record<string, any>) => {
+  let text = formatJson(json);
+  return addLinePadding(text);
 };
 
 export const getJSONParseErrorPosition = (message: string) => {

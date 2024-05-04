@@ -1,11 +1,6 @@
 "use client";
 import { forwardRef, useEffect, useRef, useImperativeHandle } from "react";
-import {
-  EditorState,
-  StateEffect,
-  StateField,
-  Transaction,
-} from "@codemirror/state";
+import { EditorState, StateEffect, StateField } from "@codemirror/state";
 import { EditorView, Decoration } from "@codemirror/view";
 import { basicSetup } from "@codemirror/basic-setup";
 import { json } from "@codemirror/lang-json";
@@ -28,30 +23,6 @@ const updateDecorations = StateEffect.define({
     return value?.map(mapping);
   },
 });
-
-const enforceLineCountExtension = EditorState.transactionFilter.of(
-  (transaction: Transaction) => {
-    // if (transaction.docChanged) {
-    //   const newDoc = transaction.newDoc;
-    //   const lineCount = newDoc.lines;
-    //   if (lineCount < 50) {
-    //     const additionalLinesNeeded = 50 - lineCount;
-    //     const changes = transaction.changes;
-    //     const appendPosition = newDoc?.length || 0;
-    //     const newLines = "\n".repeat(additionalLinesNeeded);
-
-    //     console.log(
-    //       "Appending additional lines to meet the 50-line minimum requirement."
-    //     );
-    //     return {
-    //       changes: changes.compose({ from: appendPosition, insert: newLines }),
-    //       scrollIntoView: true,
-    //     };
-    //   }
-    // }
-    return transaction;
-  }
-);
 
 type Props = {
   content: string;
@@ -101,12 +72,7 @@ const Editor = forwardRef(({ content }: Props, ref) => {
 
   useEffect(() => {
     if (editorDiv.current) {
-      const extensions = [
-        basicSetup,
-        json(),
-        errorHighlightField,
-        enforceLineCountExtension,
-      ];
+      const extensions = [basicSetup, json(), errorHighlightField];
       const state = EditorState.create({
         doc: content,
         extensions,

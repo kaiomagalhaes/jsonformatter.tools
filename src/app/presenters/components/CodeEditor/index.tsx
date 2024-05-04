@@ -22,35 +22,39 @@ const CodeEditor = () => {
 
   const editorRef = useRef<Actions>(null);
 
-  const formatToJson = (format?: (json: string) => string) => {
-    let content = editorRef?.current?.getContent() || defaultContent;
+  const getJsonObject = (text: string) => {
     try {
-      let json = formatJsonWithLinePadding(content);
-      if (format) {
-        json = format(json);
-      }
-
-      editorRef?.current?.updateContent(json);
+      return JSON.parse(text);
     } catch (e: any) {
-      content = addLinePadding(content, 50);
-      editorRef?.current?.updateContent(content);
-
       const position = getJSONParseErrorPosition(e.message);
       editorRef?.current?.onJSONParserError(position);
+      return null;
     }
+  };
+
+  const formatToJson = (format?: (json: Record<string, any>) => string) => {
+    let content = editorRef?.current?.getContent() || defaultContent;
+    const json = getJsonObject(content);
+    if (!json) return;
+    let parsedJson = formatJsonWithLinePadding(json);
+    if (format) {
+      parsedJson = format(json);
+    }
+
+    editorRef?.current?.updateContent(parsedJson);
   };
 
   const sortKeys = () => {
     formatToJson((json) => {
-      const sortedJson = sortJsonKeys(JSON.parse(json));
-      return formatJsonWithLinePadding(JSON.stringify(sortedJson, null, 2));
+      const sortedJson = sortJsonKeys(json);
+      return formatJsonWithLinePadding(sortedJson);
     });
   };
 
   const removeNull = () => {
     formatToJson((json) => {
-      const cleanedJson = removeNullValues(JSON.parse(json));
-      return formatJsonWithLinePadding(JSON.stringify(cleanedJson, null, 2));
+      const cleanedJson = removeNullValues(json);
+      return formatJsonWithLinePadding(cleanedJson);
     });
   };
 
