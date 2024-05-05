@@ -44,8 +44,8 @@ const CodeEditor = forwardRef(({ customDecorators }: Props, ref) => {
 
   useImperativeHandle(ref, () => ({
     getContent: () => editorRef?.current?.getContent() || defaultContent,
-    toJson: () => formatToJson,
-    sortKeys: () => sortKeys,
+    toJson: formatToJson,
+    sortKeys: sortKeys,
     removeNullValues: removeNull,
   }));
 
