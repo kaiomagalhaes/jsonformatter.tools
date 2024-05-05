@@ -1,13 +1,7 @@
 "use client";
-import {
-  forwardRef,
-  useEffect,
-  useRef,
-  useImperativeHandle,
-  useState,
-} from "react";
+import { forwardRef, useEffect, useRef, useImperativeHandle } from "react";
 import { EditorState } from "@codemirror/state";
-import { EditorView, Decoration, DecorationSet } from "@codemirror/view";
+import { EditorView, Decoration } from "@codemirror/view";
 import { basicSetup } from "@codemirror/basic-setup";
 import { json } from "@codemirror/lang-json";
 import {
@@ -24,11 +18,10 @@ type Props = {
   content: string;
   decorations: any[];
   addDecoration: (decoration: any) => void;
-  removeDecoration: (decoration: any) => void;
 };
 
 const Editor = forwardRef(
-  ({ content, decorations, addDecoration, removeDecoration }: Props, ref) => {
+  ({ content, decorations, addDecoration }: Props, ref) => {
     const editorDiv = useRef(null);
     const editorViewRef = useRef<EditorView | null>(null);
 

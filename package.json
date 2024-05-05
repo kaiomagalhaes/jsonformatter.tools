@@ -18,6 +18,7 @@
     "@emotion/styled": "^11.11.5",
     "@mui/icons-material": "^5.15.16",
     "@mui/material-nextjs": "^5.15.11",
+    "diff-match-patch": "^1.0.5",
     "next": "14.2.3",
     "react": "^18",
     "react-dom": "^18"

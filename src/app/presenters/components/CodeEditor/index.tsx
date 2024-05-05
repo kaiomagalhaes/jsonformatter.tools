@@ -1,5 +1,11 @@
 "use client";
-import { useRef, useState } from "react";
+import {
+  forwardRef,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+  useState,
+} from "react";
 import Editor from "./presenters/components/Editor";
 import {
   addLinePadding,
@@ -8,7 +14,7 @@ import {
   removeNullValues,
   sortJsonKeys,
 } from "./utils/json";
-import { Button, Grid } from "@mui/material";
+import { Grid } from "@mui/material";
 
 type Actions = {
   getContent: () => string;
@@ -18,19 +24,37 @@ type Actions = {
 
 export const MINIMUM_LINES = 40;
 
-const CodeEditor = () => {
+type Props = {
+  customDecorators: any[];
+};
+
+const CodeEditor = forwardRef(({ customDecorators }: Props, ref) => {
+  const editorRef = useRef<Actions>(null);
   const defaultContent = addLinePadding("");
   const [content] = useState(defaultContent);
   const [decorations, setDecorations] = useState<any[]>([]);
   const addDecoration = (decoration: any) => {
-    setDecorations([...decorations, decoration]);
+    const newDecorations = [...decorations, decoration];
+    const sortedDecorations = newDecorations.sort(
+      (a, b) => a.from - b.from || a.to - b.to
+    );
+
+    setDecorations(sortedDecorations);
   };
 
-  const removeDecoration = (decoration: any) => {
-    setDecorations(decorations.filter((d) => d !== decoration));
-  };
+  useImperativeHandle(ref, () => ({
+    getContent: () => editorRef?.current?.getContent() || defaultContent,
+    toJson: () => {
+      console.log("abana");
+      formatToJson();
+    },
+    sortKeys: () => sortKeys,
+    removeNullValues: removeNull,
+  }));
 
-  const editorRef = useRef<Actions>(null);
+  useEffect(() => {
+    setDecorations(customDecorators);
+  }, [customDecorators]);
 
   const getJsonObject = (text: string) => {
     try {
@@ -43,6 +67,7 @@ const CodeEditor = () => {
   };
 
   const formatToJson = (format?: (json: Record<string, any>) => string) => {
+    console.log("formating up");
     let content = editorRef?.current?.getContent() || defaultContent;
     const json = getJsonObject(content);
     if (!json) return;
@@ -69,41 +94,18 @@ const CodeEditor = () => {
   };
 
   return (
-    <>
-      <Grid container spacing={1} pb={2}>
-        <Grid item>
-          <Button
-            onClick={() => formatToJson()}
-            variant="contained"
-            color="primary"
-          >
-            Format
-          </Button>
-        </Grid>
-        <Grid item>
-          <Button onClick={sortKeys} variant="contained" color="primary">
-            Sort keys
-          </Button>
-        </Grid>
-        <Grid item>
-          <Button onClick={removeNull} variant="contained" color="primary">
-            Remove null values
-          </Button>
-        </Grid>
+    <Grid container>
+      <Grid item xs={12}>
+        <Editor
+          ref={editorRef}
+          content={content}
+          decorations={decorations}
+          addDecoration={addDecoration}
+        />
       </Grid>
-      <Grid container>
-        <Grid item xs={12}>
-          <Editor
-            ref={editorRef}
-            content={content}
-            decorations={decorations}
-            removeDecoration={removeDecoration}
-            addDecoration={addDecoration}
-          />
-        </Grid>
-      </Grid>
-    </>
+    </Grid>
   );
-};
+});
 
+CodeEditor.displayName = "CodeEditor";
 export default CodeEditor;
