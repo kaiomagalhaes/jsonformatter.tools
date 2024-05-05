@@ -77,7 +77,6 @@ export default function Home() {
         <Grid item>
           <Button
             onClick={() => {
-              console.log("alala");
               leftEditorRef.current?.toJson();
               rightEditorRef.current?.toJson();
             }}
@@ -111,17 +110,15 @@ export default function Home() {
             Remove null values
           </Button>
         </Grid>
-        {!isComparisonViewOpen && (
-          <Grid item>
-            <Button
-              onClick={() => setIsComparisonViewOpen(true)}
-              variant="contained"
-              color="primary"
-            >
-              Open comparison view
-            </Button>
-          </Grid>
-        )}
+        <Grid item>
+          <Button
+            onClick={() => setIsComparisonViewOpen(!isComparisonViewOpen)}
+            variant="contained"
+            color="primary"
+          >
+            Toggle comparison view
+          </Button>
+        </Grid>
         {isComparisonViewOpen && (
           <Grid item>
             <Button

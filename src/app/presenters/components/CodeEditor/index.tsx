@@ -44,10 +44,7 @@ const CodeEditor = forwardRef(({ customDecorators }: Props, ref) => {
 
   useImperativeHandle(ref, () => ({
     getContent: () => editorRef?.current?.getContent() || defaultContent,
-    toJson: () => {
-      console.log("abana");
-      formatToJson();
-    },
+    toJson: () => formatToJson,
     sortKeys: () => sortKeys,
     removeNullValues: removeNull,
   }));
@@ -67,7 +64,6 @@ const CodeEditor = forwardRef(({ customDecorators }: Props, ref) => {
   };
 
   const formatToJson = (format?: (json: Record<string, any>) => string) => {
-    console.log("formating up");
     let content = editorRef?.current?.getContent() || defaultContent;
     const json = getJsonObject(content);
     if (!json) return;
