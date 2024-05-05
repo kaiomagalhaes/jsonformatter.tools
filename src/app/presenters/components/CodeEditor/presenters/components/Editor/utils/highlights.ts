@@ -19,3 +19,21 @@ export const updateDecorations = StateEffect.define<DecorationSet>({
     return value.map(mapping);
   },
 });
+
+export const createDecoration = (
+  contentSize: number,
+  position: { from: number; to: number },
+  className: string,
+  backgroundColor: string
+) => {
+  const { from, to } = position;
+  let processedTo = to;
+  if (from === to) {
+    processedTo = Math.min(contentSize, to + 1);
+  }
+
+  return Decoration.mark({
+    className: className,
+    attributes: { style: `background-color: ${backgroundColor};` },
+  }).range(from, processedTo);
+};

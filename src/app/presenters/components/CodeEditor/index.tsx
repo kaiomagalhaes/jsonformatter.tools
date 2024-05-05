@@ -21,6 +21,14 @@ export const MINIMUM_LINES = 40;
 const CodeEditor = () => {
   const defaultContent = addLinePadding("");
   const [content] = useState(defaultContent);
+  const [decorations, setDecorations] = useState<any[]>([]);
+  const addDecoration = (decoration: any) => {
+    setDecorations([...decorations, decoration]);
+  };
+
+  const removeDecoration = (decoration: any) => {
+    setDecorations(decorations.filter((d) => d !== decoration));
+  };
 
   const editorRef = useRef<Actions>(null);
 
@@ -85,7 +93,13 @@ const CodeEditor = () => {
       </Grid>
       <Grid container>
         <Grid item xs={12}>
-          <Editor ref={editorRef} content={content} />
+          <Editor
+            ref={editorRef}
+            content={content}
+            decorations={decorations}
+            removeDecoration={removeDecoration}
+            addDecoration={addDecoration}
+          />
         </Grid>
       </Grid>
     </>
