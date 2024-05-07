@@ -19,10 +19,11 @@ type Props = {
   content: string;
   decorations: any[];
   addDecoration: (decoration: any) => void;
+  removeDecorations: (decorations: any) => void;
 };
 
 const Editor = forwardRef(
-  ({ content, decorations, addDecoration }: Props, ref) => {
+  ({ content, decorations, addDecoration, removeDecorations }: Props, ref) => {
     const editorDiv = useRef(null);
     const editorViewRef = useRef<EditorView | null>(null);
 
@@ -36,7 +37,6 @@ const Editor = forwardRef(
             to: editorView.state.doc.length,
             insert: newContent,
           },
-          effects: updateDecorations.of(Decoration.none),
         });
       },
       onJSONParserError: (position: Position) => {
@@ -66,7 +66,7 @@ const Editor = forwardRef(
           basicSetup,
           json(),
           highlightExtension,
-          cleanHighlightsListener,
+          cleanHighlightsListener(() => removeDecorations(decorations)),
           ensureLineCountListener,
         ];
         const state = EditorState.create({

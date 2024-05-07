@@ -42,6 +42,19 @@ const CodeEditor = forwardRef(({ customDecorators }: Props, ref) => {
     setDecorations(sortedDecorations);
   };
 
+  const removeDecorations = (decorationsToRemove: any[]) => {
+    const newDecorations = decorations.filter(
+      (decoration) =>
+        !decorationsToRemove.some(
+          (decorationToRemove) =>
+            decorationToRemove.from === decoration.from &&
+            decorationToRemove.to === decoration.to
+        )
+    );
+
+    setDecorations(newDecorations);
+  };
+
   useImperativeHandle(ref, () => ({
     getContent: () => editorRef?.current?.getContent() || defaultContent,
     toJson: formatToJson,
@@ -97,6 +110,7 @@ const CodeEditor = forwardRef(({ customDecorators }: Props, ref) => {
           content={content}
           decorations={decorations}
           addDecoration={addDecoration}
+          removeDecorations={removeDecorations}
         />
       </Grid>
     </Grid>

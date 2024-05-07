@@ -2,15 +2,16 @@ import { Decoration, EditorView } from "@codemirror/view";
 import { updateDecorations } from "./highlights";
 import { MINIMUM_LINES } from "../../../..";
 
-export const cleanHighlightsListener = EditorView.updateListener.of(
-  (update) => {
+export const cleanHighlightsListener = (removeDecorations: () => void) => {
+  return EditorView.updateListener.of((update) => {
     if (update.docChanged) {
       update.view.dispatch({
         effects: updateDecorations.of(Decoration.none),
       });
+      removeDecorations();
     }
-  }
-);
+  });
+};
 
 export const ensureLineCountListener = EditorView.updateListener.of(
   (update) => {
