@@ -1,3 +1,4 @@
+import { Position } from "@/app/presenters/types/Position";
 import { StateEffect, StateField } from "@codemirror/state";
 import { Decoration, DecorationSet, EditorView } from "@codemirror/view";
 
@@ -22,7 +23,7 @@ export const updateDecorations = StateEffect.define<DecorationSet>({
 
 export const createDecoration = (
   contentSize: number,
-  position: { from: number; to: number },
+  position: Position,
   className: string,
   backgroundColor: string
 ) => {

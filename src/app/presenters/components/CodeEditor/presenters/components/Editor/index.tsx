@@ -13,6 +13,7 @@ import {
   cleanHighlightsListener,
   ensureLineCountListener,
 } from "./utils/listeners";
+import { Position } from "@/app/presenters/types/Position";
 
 type Props = {
   content: string;
@@ -38,7 +39,7 @@ const Editor = forwardRef(
           effects: updateDecorations.of(Decoration.none),
         });
       },
-      onJSONParserError: (position: { from: number; to: number }) => {
+      onJSONParserError: (position: Position) => {
         const editorView = editorViewRef.current;
         if (!position || !editorView) return;
 

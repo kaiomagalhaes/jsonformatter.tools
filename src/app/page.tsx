@@ -6,6 +6,7 @@ import Grid from "@mui/material/Grid";
 import { Button } from "@mui/material";
 import DiffMatchPatch from "diff-match-patch";
 import { createDecoration } from "./presenters/components/CodeEditor/presenters/components/Editor/utils/highlights";
+import { Position } from "./presenters/types/Position";
 
 type Actions = {
   getContent: () => string;
@@ -31,8 +32,8 @@ export default function Home() {
     const diffs = dmp.diff_main(leftText, rightText);
     dmp.diff_cleanupSemantic(diffs); // Optional: improve readability by eliminating noise
 
-    const leftDiffPositions = [];
-    const rightDiffPositions = [];
+    const leftDiffPositions: Position[] = [];
+    const rightDiffPositions: Position[] = [];
     let leftIndex = 0;
     let rightIndex = 0;
 
